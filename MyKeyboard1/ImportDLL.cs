@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MyKeyboard1
 {
@@ -37,6 +34,7 @@ namespace MyKeyboard1
         private extern static int GetWindowLong(IntPtr hwnd, int nIndex);
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
+
         //function from my dll file
         [DllImport("KeyboardDLL.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int StartDialog(string str, int length);

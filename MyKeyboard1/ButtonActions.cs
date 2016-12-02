@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -97,7 +93,8 @@ namespace MyKeyboard1
 
         private void RegularButtonRelease(object sender, MouseButtonEventArgs e)
         {
-            //stop the timer and clean
+            //stop the timer and clean button
+            myTimer.Interval = 1000;
             myTimer.Enabled = false;
             currentPressedButton = "";
         }
@@ -113,15 +110,26 @@ namespace MyKeyboard1
             bool success = SetForegroundWindow(calculatorHandle);
             if (success)
             {
+                //special sign %, ^, (, ) need to be enclose it within braces {}.
+                if (s == "%")
+                    s = "{%}";
+                else if(s == "^")
+                    s = "{^}";
+                else if (s == "(")
+                    s = "{(}";
+                else if (s == ")")
+                    s = "{)}";
+
                 //send cutrrent key to target window
                 currentPressedButton = s;
 
                 //doing with ctrl/shift/alt
-                if (shiftIsDown)
+                /*if (shiftIsDown)
                 {
                     s = s.ToLower();
                     s = "+(" + s + ")";
-                }
+                }*/
+                
 
                 if (ctrlIsDown)
                 {

@@ -1,4 +1,4 @@
-// KeyboardDLL.cpp : ©w¸q DLL À³¥Îµ{¦¡ªº¶×¥X¨ç¦¡¡C
+ï»¿// KeyboardDLL.cpp : å®šç¾© DLL æ‡‰ç”¨ç¨‹å¼çš„åŒ¯å‡ºå‡½å¼ã€‚
 //
 
 #include "stdafx.h"
@@ -37,11 +37,15 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
+	case WM_CLOSE:
+		goto END_DIALOG;
+		break;
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
 		case IDD_BUTTON_EXIT:
 		{
+			END_DIALOG:
 			EndDialog(hwnd, NULL);
 			return TRUE;
 		}

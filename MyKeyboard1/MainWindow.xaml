@@ -11,7 +11,7 @@
         Loaded="WindowLoaded">
 
     <Window.Resources>
-        <!-- Another Button style -->
+        <!-- Button style -->
         <Style x:Key="RoundCorner" TargetType="{x:Type Button}">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -26,10 +26,10 @@
                             <!--<Grid.Effect>
                                 <DropShadowEffect Color="Black" BlurRadius="0" Direction="300" ShadowDepth="5" Opacity="0.2" RenderingBias="Performance"/>
                             </Grid.Effect>-->
-
+                            
+							<!--A border for button-->
                             <Border x:Name="border" CornerRadius="2" BorderBrush="#FF444444" BorderThickness="1">
                                 <Border.Background>
-                                    <!--<SolidColorBrush Color="Gray" Opacity="1"></SolidColorBrush>-->
                                     <!--<RadialGradientBrush GradientOrigin="0.496,1.052" Opacity="1">
                                         <RadialGradientBrush.RelativeTransform>
                                             <TransformGroup>
@@ -42,7 +42,7 @@
                                     </RadialGradientBrush>-->
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1.2" >
                                         <GradientStop Color="#ffaaaaaa" Offset="0" />
-                                        <GradientStop Color="White" Offset="1" />
+                                        <GradientStop x:Name="Color2" Color="White" Offset="1" />
                                     </LinearGradientBrush>                             
                                 </Border.Background>
                                 <ContentPresenter HorizontalAlignment="Center"
@@ -56,18 +56,8 @@
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Background" TargetName="border">
                                     <Setter.Value>
-                                        <!--<RadialGradientBrush GradientOrigin="0.496,1.052">
-                                            <RadialGradientBrush.RelativeTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
-                                                    <TranslateTransform X="0.02" Y="0.3"/>
-                                                </TransformGroup>
-                                            </RadialGradientBrush.RelativeTransform>
-                                            <GradientStop Color="#00000000" Offset="1"/>
-                                            <GradientStop Color="#FF303030" Offset="0.3"/>
-                                        </RadialGradientBrush>-->
                                         <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1.2" >
-                                            <GradientStop Color="Gray" Offset="0" />
+                                            <GradientStop x:Name="Brush1" Color="Gray" Offset="0" />
                                             <GradientStop Color="Black" Offset="1" />
                                         </LinearGradientBrush>
                                     </Setter.Value>
@@ -79,6 +69,17 @@
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Background" TargetName="border" Value="#FF33962B"/>
                             </Trigger>
+                            <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Color2"
+                                            Storyboard.TargetProperty="Color" 
+                                            Duration="0:0:0.4"
+                                            AutoReverse="False"
+                                            From="Black" To="White"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
 
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -108,8 +109,8 @@
                                                 <TranslateTransform X="0.02" Y="0.3"/>
                                             </TransformGroup>
                                         </RadialGradientBrush.RelativeTransform>
-                                        <GradientStop Color="#FF883333" Offset="1"/>
-                                        <GradientStop Color="#FF303030" Offset="0.3"/>
+                                        <GradientStop Color="#FF706060" Offset="1"/>
+                                        <GradientStop Color="#FF883333" Offset="0.3"/>
                                     </RadialGradientBrush>
 
                                 </Border.Background>
@@ -187,8 +188,8 @@
             <Button x:Name="btnI" Grid.Row="1" Style="{StaticResource RoundCorner}" Margin="280,10,0,0" Click="RegularButtonClick">i</Button>
             <Button x:Name="btnO" Grid.Row="1" Style="{StaticResource RoundCorner}" Margin="320,10,0,0" Click="RegularButtonClick">o</Button>
             <Button x:Name="btnP" Grid.Row="1" Style="{StaticResource RoundCorner}" Margin="360,10,0,0" Click="RegularButtonClick">p</Button>
-            <Button x:Name="btnBarclate" Grid.Row="1" Style="{StaticResource RoundCorner}" Margin="400,10,0,0" Click="RegularButtonClick">"</Button>
-            <Button x:Name="btnNot" Grid.Row="1" Style="{StaticResource RoundCorner}" Margin="440,10,0,0" Click="RegularButtonClick">!</Button>
+            <Button x:Name="btnBarclate" Grid.Row="1" Style="{StaticResource RoundCorner}" Margin="400,10,0,0" Click="RegularButtonClick">'</Button>
+            <Button x:Name="btnNot" Grid.Row="1" Style="{StaticResource RoundCorner}" Margin="440,10,0,0" Click="RegularButtonClick">\</Button>
 
             <Button x:Name="btnA" Grid.Row="2" Style="{StaticResource RoundCorner}" Margin="15,10,0,0" Click="RegularButtonClick">a</Button>
             <Button x:Name="btnS" Grid.Row="2" Style="{StaticResource RoundCorner}" Margin="55,10,0,0" Click="RegularButtonClick">s</Button>
@@ -211,7 +212,7 @@
             <Button x:Name="btnM" Grid.Row="3" Style="{StaticResource RoundCorner}" Margin="280,10,0,0" Click="RegularButtonClick">m</Button>
             <Button x:Name="btnCom" Grid.Row="3" Style="{StaticResource RoundCorner}" Margin="320,10,0,0" Click="RegularButtonClick">,</Button>
             <Button x:Name="btnDot" Grid.Row="3" Style="{StaticResource RoundCorner}" Margin="360,10,0,0" Click="RegularButtonClick">.</Button>
-            <Button x:Name="btnQue" Grid.Row="3" Style="{StaticResource RoundCorner}" Margin="400,10,0,0" Click="RegularButtonClick">?</Button>
+            <Button x:Name="btnQue" Grid.Row="3" Style="{StaticResource RoundCorner}" Margin="400,10,0,0" Click="RegularButtonClick">/</Button>
             <Button x:Name="btnSemi" Grid.Row="3" Style="{StaticResource RoundCorner}" Margin="440,10,0,0" Click="RegularButtonClick">;</Button>
 
             <Button x:Name="btnAbout" Style="{StaticResource RoundCorner}" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" Click="AboutDialog">About</Button>

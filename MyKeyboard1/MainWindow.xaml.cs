@@ -1,24 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Automation;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Interop;
-using System.Security.Permissions;
-using System.Windows.Shell;
+
 
 namespace MyKeyboard1
 {
@@ -27,8 +15,6 @@ namespace MyKeyboard1
     /// </summary>
     public partial class MainWindow : Window
     {
-        //public static bool runHandler;
-        public static IntPtr targetWindowPtr;
         private static string targetWindowTitle;
         CharsList myButtonList;
         private bool shiftIsDown;
@@ -36,7 +22,6 @@ namespace MyKeyboard1
         private bool altIsDown;
         private string currentPressedButton;
         private System.Timers.Timer myTimer;
-        //WinEventDelegate dele = null;
         delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
         
         // Constants from winuser.h
@@ -47,31 +32,23 @@ namespace MyKeyboard1
         const int WS_EX_NOACTIVATE = 0x08000000;
         const int GWL_EXSTYLE = -20;
 
-        // Need to ensure delegate is not collected while we're using it,
-        // storing it in a class field is simplest way to do this.
-        /*static WinEventDelegate procDelegate = new WinEventDelegate(WinEventProc);*/
-
         public MainWindow()
         {
-            //runHandler = false;
-            targetWindowPtr = IntPtr.Zero;
             shiftIsDown = false;
             ctrlIsDown = false;
             altIsDown = false;
 
             InitializeComponent();
-
-            //dele = new WinEventDelegate(WinEventProc);
-            //IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
-            //UnhookWinEvent(hhook);
         }
 
         private static string GetActiveWindowTitle()
         {
+            //prepare buffer
             const int nChars = 256;
             StringBuilder Buff = new StringBuilder(nChars);
             IntPtr handle = GetForegroundWindow();
 
+            //get target window title and to a string
             if (GetWindowText(handle, Buff, nChars) > 0)
             {
                 return Buff.ToString();
@@ -79,34 +56,6 @@ namespace MyKeyboard1
             return "Cannot get window!";
         }
 
-        /*private static void OnFocusChangedHandler(object src, AutomationFocusChangedEventArgs args)
-        {
-            if (!MainWindow.runHandler)
-                return;
-
-            Console.WriteLine("New focus is:");
-            AutomationElement element = src as AutomationElement;
-            if (element != null)
-            {                
-                string name = element.Current.Name;
-                string id = element.Current.AutomationId;
-                int processId = element.Current.ProcessId;
-                using (Process process = Process.GetProcessById(processId))
-                {
-                    Console.WriteLine("  Name: {0}, Id: {1}, Process: {2}", name, id, process.ProcessName);
-                    System.Console.WriteLine(element.Current.AutomationId);
-                }
-            }
-        }*/
-
-        /*private static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
-        {
-            if (GetActiveWindowTitle().Equals("MainWindow"))
-                return;
-
-            targetWindowTitle = GetActiveWindowTitle();
-            System.Console.WriteLine(targetWindowTitle);
-        }*/
 
         /*protected override void OnSourceInitialized(EventArgs e)
         {
@@ -135,22 +84,26 @@ namespace MyKeyboard1
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            //make my window that cannot be activated
+            //this help when I click on buttons
             WindowInteropHelper wih = new WindowInteropHelper(this);
             int exstyle = GetWindowLong(wih.Handle, GWL_EXSTYLE);
             exstyle |= WS_EX_NOACTIVATE;
             SetWindowLong(wih.Handle, GWL_EXSTYLE, exstyle);
 
-            BindButtonText();            
+            //bind Chars object
+            BindButtonText();
 
             //will this be faster? I don't really feel it...
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
 
+            //RenderOptions.SetBitmapScalingMode(Grid1, BitmapScalingMode.LowQuality);
+
+            //create a timer to calculate key long press
             myTimer = new System.Timers.Timer();
             myTimer.Interval = 1000;
-            myTimer.Elapsed += OnTimedEvent;
+            myTimer.Elapsed += OnTimedEvent;  //event for key long press
             myTimer.AutoReset = true;
-
-            //WindowChrome.SetWindowChrome(this, new WindowChrome());
         }
 
         private void CloseApp(object sender, RoutedEventArgs e)
@@ -174,13 +127,14 @@ namespace MyKeyboard1
 
             //bind all a~z buttons
             List<System.Windows.Data.Binding> myBindingList = new List<System.Windows.Data.Binding>();
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < 42; i++)
             {
                 System.Windows.Data.Binding mb = new System.Windows.Data.Binding("myChar");
                 mb.Source = myButtonList.theList[i];
                 mb.Mode = BindingMode.OneWay;
                 myBindingList.Add(mb);
             }
+
             btnA.SetBinding(ContentProperty, myBindingList[0]);
             btnB.SetBinding(ContentProperty, myBindingList[1]);
             btnC.SetBinding(ContentProperty, myBindingList[2]);
@@ -209,19 +163,39 @@ namespace MyKeyboard1
             btnX.SetBinding(ContentProperty, myBindingList[23]);
             btnY.SetBinding(ContentProperty, myBindingList[24]);
             btnZ.SetBinding(ContentProperty, myBindingList[25]);
+
+            btn0.SetBinding(ContentProperty, myBindingList[26]);
+            btn1.SetBinding(ContentProperty, myBindingList[27]);
+            btn2.SetBinding(ContentProperty, myBindingList[28]);
+            btn3.SetBinding(ContentProperty, myBindingList[29]);
+            btn4.SetBinding(ContentProperty, myBindingList[30]);
+            btn5.SetBinding(ContentProperty, myBindingList[31]);
+            btn6.SetBinding(ContentProperty, myBindingList[32]);
+            btn7.SetBinding(ContentProperty, myBindingList[33]);
+            btn8.SetBinding(ContentProperty, myBindingList[34]);
+            btn9.SetBinding(ContentProperty, myBindingList[35]);            
+
+            btnBarclate.SetBinding(ContentProperty, myBindingList[36]);
+            btnNot.SetBinding(ContentProperty, myBindingList[37]);
+            btnCom.SetBinding(ContentProperty, myBindingList[38]);
+            btnDot.SetBinding(ContentProperty, myBindingList[39]);
+            btnQue.SetBinding(ContentProperty, myBindingList[40]);
+            btnSemi.SetBinding(ContentProperty, myBindingList[41]);
         }
 
         //event for timer over 1000 each time
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            Console.WriteLine("The Elapsed event was raised at {0}", e.SignalTime);
+            //if this is fired, set time interval to 300 ms
+            myTimer.Interval = 100;
 
+            //find the target window
             targetWindowTitle = GetActiveWindowTitle();
             IntPtr calculatorHandle = FindWindow(null, targetWindowTitle);
             bool success = SetForegroundWindow(calculatorHandle);
             if (success)
             {
-                Console.WriteLine("OnTimedEvent sending key " + currentPressedButton + " to " + targetWindowTitle);
+                Console.WriteLine("OnTimedEvent sending key " + currentPressedButton + " to " + targetWindowTitle + " at " + e.SignalTime);
                 SendKeys.SendWait(currentPressedButton);
             }
             else

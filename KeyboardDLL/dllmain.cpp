@@ -1,4 +1,4 @@
-// dllmain.cpp : ©w¸q DLL À³¥Îµ{¦¡ªº¶i¤JÂI¡C
+ï»¿// dllmain.cpp : å®šç¾© DLL æ‡‰ç”¨ç¨‹å¼çš„é€²å…¥é»ã€‚
 #include "stdafx.h"
 #include "DLLHeaders.h"
 
